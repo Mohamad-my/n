@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .form-control:invalid {
+            border-color: #dc3545;
+        }
+        .form-control:valid {
+            border-color: #28a745;
+        }
+        .invalid-feedback {
+            display: none;
+        }
+        .is-invalid .invalid-feedback {
+            display: block;
+        }
+        .total-price {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="my-4 text-center">Order Form</h1>
+        <form id="orderForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+                <div class="invalid-feedback" id="emailError">Please enter a valid email address.</div>
+            </div>
+            <div class="form-group">
+                <label for="address">Delivery Address</label>
+                <input type="text" id="address" name="address" class="form-control" required>
+                <div class="invalid-feedback" id="addressError">Please enter a delivery address.</div>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" required>
+                <div class="invalid-feedback" id="phoneError">Please enter a valid phone number.</div>
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <select id="city" name="city" class="form-control" required>
+                    <option value="">Select a city</option>
+                    <option value="Amman">Amman</option>
+                    <option value="Irbid">Irbid</option>
+                    <option value="Zarqa">Zarqa</option>
+                    <option value="karak">Karak</option>
+                    <!-- Add more cities as needed -->
+                </select>
+                <div class="invalid-feedback" id="cityError">Please select a city.</div>
+            </div>
+            <div class="form-group">
+                <label for="device">Select Device Type</label>
+                <select id="device" name="device" class="form-control" required>
+                    <option value="">Select a device</option>
+                    <option value="Device A">Device A</option>
+                    <option value="Device B">Device B</option>
+                    <option value="Device C">Device C</option>
+                    <!-- Add more devices as needed -->
+                </select>
+                <div class="invalid-feedback" id="deviceError">Please select a device type.</div>
+            </div>
+            <div class="form-group">
+                <label for="delivery">Select Delivery Area</label>
+                <select id="delivery" name="delivery" class="form-control" required>
+                    <option value="">Select an area</option>
+                    <option value="local">Local Area ($20)</option>
+                    <option value="regional">Regional Area ($50)</option>
+                    <option value="national">National Area ($100)</option>
+                </select>
+                <div class="invalid-feedback" id="deliveryError">Please select a delivery area.</div>
+            </div>
+            <div class="total-price" id="totalPrice">
+                Total Price: $0
+            </div>
+            <button type="submit" class="btn btn-primary btn-block mt-4">Submit Order</button>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Include EmailJS -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+       <!-- Updated JavaScript -->
+
+    // Initialize EmailJS with your public key
+    emailjs.init('T-Y30ULyMIRi7nzRg'); // Replace with your EmailJS public key
+
+    const form = document.getElementById('orderForm');
+    const totalPriceElement = document.getElementById('totalPrice');
+
+    // Function to validate form fields
+    function validateForm() {
+        let isValid = true;
+
+        // Email validation
+        const email = form.email.value;
+        const emailError = document.getElementById('emailError');
+        if (!email) {
+            emailError.style.display = 'block';
+            form.email.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            emailError.style.display = 'none';
+            form.email.classList.remove('is-invalid');
+        }
+
+        // Address validation
+        const address = form.address.value;
+        const addressError = document.getElementById('addressError');
+        if (!address) {
+            addressError.style.display = 'block';
+            form.address.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            addressError.style.display = 'none';
+            form.address.classList.remove('is-invalid');
+        }
+
+        // Phone validation
+        const phone = form.phone.value;
+        const phoneError = document.getElementById('phoneError');
+        if (!phone) {
+            phoneError.style.display = 'block';
+            form.phone.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            phoneError.style.display = 'none';
+            form.phone.classList.remove('is-invalid');
+        }
+
+        // City validation
+        const city = form.city.value;
+        const cityError = document.getElementById('cityError');
+        if (!city) {
+            cityError.style.display = 'block';
+            form.city.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            cityError.style.display = 'none';
+            form.city.classList.remove('is-invalid');
+        }
+
+        // Device validation
+        const device = form.device.value;
+        const deviceError = document.getElementById('deviceError');
+        if (!device) {
+            deviceError.style.display = 'block';
+            form.device.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            deviceError.style.display = 'none';
+            form.device.classList.remove('is-invalid');
+        }
+
+        // Delivery area validation
+        const delivery = form.delivery.value;
+        const deliveryError = document.getElementById('deliveryError');
+        if (!delivery) {
+            deliveryError.style.display = 'block';
+            form.delivery.classList.add('is-invalid');
+            isValid = false;
+        } else {
+            deliveryError.style.display = 'none';
+            form.delivery.classList.remove('is-invalid');
+        }
+
+        return isValid;
+    }
+
+    // Update the total price based on delivery area, city, and device type
+    function updateTotalPrice() {
+        const city = form.city.value;
+        const device = form.device.value;
+        const delivery = form.delivery.value;
+        let deviceCost = 0;
+        let deliveryCost = 0;
+
+        switch (device) {
+            case 'Device A':
+                deviceCost = 100;
+                break;
+            case 'Device B':
+                deviceCost = 150;
+                break;
+            case 'Device C':
+                deviceCost = 200;
+                break;
+        }
+
+        switch (delivery) {
+            case 'local':
+                deliveryCost = 20;
+                break;
+            case 'regional':
+                deliveryCost = 50;
+                break;
+            case 'national':
+                deliveryCost = 100;
+                break;
+        }
+
+        // Adjust cost based on city
+        if (city === 'Amman') {
+            deviceCost += 2;
+        } else if (city === 'Irbid') {
+            deviceCost += 4;
+        } else if (city === 'Zarqa') {
+            deviceCost += 3;
+        } else if (city === 'karak') {
+            deviceCost += 5;
+        }
+
+        const totalCost = deviceCost + deliveryCost;
+        totalPriceElement.textContent = `Total Price: $${totalCost}`;
+    }
+
+    // Handle changes to the form fields
+    form.addEventListener('change', updateTotalPrice);
+
+    // Handle form submission
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Validate form
+        if (!validateForm()) {
+            return;
+        }
+
+        // Collect form data
+        const email = form.email.value;
+        const address = form.address.value;
+        const phone = form.phone.value;
+        const city = form.city.value;
+        const device = form.device.value;
+        const delivery = form.delivery.value;
+
+        let deviceCost = 0;
+        let deliveryCost = 0;
+
+        switch (device) {
+            case 'Device A':
+                deviceCost = 100;
+                break;
+            case 'Device B':
+                deviceCost = 150;
+                break;
+            case 'Device C':
+                deviceCost = 200;
+                break;
+        }
+
+        switch (delivery) {
+            case 'local':
+                deliveryCost = 20;
+                break;
+            case 'regional':
+                deliveryCost = 50;
+                break;
+            case 'national':
+                deliveryCost = 100;
+                break;
+        }
+
+        // Adjust cost based on city
+        if (city === 'Amman') {
+            deviceCost += 2;
+        } else if (city === 'Irbid') {
+            deviceCost += 4;
+        } else if (city === 'Zarqa') {
+            deviceCost += 3;
+        } else if (city === 'karak') {
+            deviceCost += 5;
+        }
+
+        const totalCost = deviceCost + deliveryCost;
+
+        // Template parameters for EmailJS
+        const templateParams = {
+            email: email,
+            address: address,
+            phone: phone,
+            city: city,
+            device: device,
+            delivery: delivery,
+            deliveryCost: deliveryCost,
+            deviceCost: deviceCost,
+            totalCost: totalCost
+        };
+
+        // Send email using EmailJS
+        emailjs.send('service_1xmkh5a', 'template_a8etrhd', templateParams)
+            .then(function(response) {
+                alert('Order submitted successfully!');
+                form.reset();
+                totalPriceElement.textContent = 'Total Price: $0';
+            }, function(error) {
+                alert('Failed to submit order. Please try again.');
+            });
+    });
+</script>
+</body>
+</html>
